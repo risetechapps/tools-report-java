@@ -1,5 +1,7 @@
 package br.app.risetech.tools.report;
 
+import br.app.risetech.tools.report.types.Countries;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -84,6 +86,19 @@ public class Main {
         } catch (Exception e) {
             return ensureNonEmpty(key);
         }
+    }
+
+    public static String mapCountry(String country) {
+        if (country == null) {
+            return "";
+        }
+        Countries c = Countries.getPerIso(country.toUpperCase());
+
+        if(c != null) {
+            return c.getName();
+        }
+
+        return "";
     }
 
 }
