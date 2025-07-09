@@ -22,7 +22,6 @@ public class Main {
         return value.toString().toUpperCase();
     }
 
-
     public static String ensureNonEmpty(Object value) {
         if (value == null || value.toString().trim().isEmpty()) {
             return "";
