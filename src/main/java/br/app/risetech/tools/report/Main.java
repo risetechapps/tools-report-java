@@ -37,9 +37,17 @@ public class Main {
             return formatDate(formattedDate);
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return "";
         }
     }
+
+    public static String formatDate(Date date) {
+        return formatDate(date.toString());
+    };
+
+    public static String formatDate(Date date, String localeStr) {
+        return formatDate(date.toString(), localeStr);
+    };
 
     public static String formatDate(String dateStr) {
         return formatDate(dateStr, Locale.getDefault().toString());
@@ -73,15 +81,11 @@ public class Main {
         }
 
         try {
-
-            Enumeration<String> keys = bundle.getKeys();
-
             if (bundle.containsKey(key)) {
                 return bundle.getString(key);
             } else {
                 return ensureNonEmpty(key);
             }
-
         } catch (Exception e) {
             return ensureNonEmpty(key);
         }
@@ -99,5 +103,65 @@ public class Main {
 
         return "";
     }
+
+    public static String mask(String value, String mask) {
+        if (value == null || value.isEmpty() || mask == null || mask.isEmpty()) {
+            return value;
+        }
+
+        String cleanValue = value.replaceAll("[^0-9a-zA-Z]", "");
+
+        StringBuilder maskedValue = new StringBuilder();
+        int valueIndex = 0;
+
+        for (int maskIndex = 0; maskIndex < mask.length(); maskIndex++) {
+            char maskChar = mask.charAt(maskIndex);
+
+            if (maskChar == '#') {
+                if (valueIndex < cleanValue.length()) {
+                    maskedValue.append(cleanValue.charAt(valueIndex));
+                    valueIndex++;
+                } else {
+                    break;
+                }
+            } else {
+                maskedValue.append(maskChar);
+            }
+        }
+
+        if (valueIndex < cleanValue.length()) {
+            maskedValue.append(cleanValue.substring(valueIndex));
+        }
+
+        return maskedValue.toString();
+    }
+
+    public static String maskCPF(String data) {
+        return mask(data, "###.###.###-##");
+    };
+
+    public static String maskCNPJ(String data) {
+        return mask(data, "##.###.###/####-##");
+    };
+
+    public static String maskCellphone(String data) {
+        String cleanValue = data.replaceAll("[^0-9a-zA-Z]", "");
+
+        if(cleanValue.length() > 13) {
+            return mask(data, " +## (##) #####-####");
+        }
+        return mask(data, "(##) #####-####");
+    };
+
+    public static String maskTelephone(String data) {
+        String cleanValue = data.replaceAll("[^0-9a-zA-Z]", "");
+
+        if(cleanValue.length() > 11) {
+            return mask(data, " +## (##) #####-####");
+        }
+        return mask(data, "(##) #####-####");
+    };
+
+
 
 }
