@@ -41,6 +41,17 @@ public class Main {
         }
     }
 
+    public static String currentDateTime() {
+        try {
+            SimpleDateFormat targetFormat = new SimpleDateFormat("HH:mm:ss");
+            String formattedDateTime = targetFormat.format(new Date());
+            return currentDate() + " - "+ formattedDateTime;
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+
     public static String formatDate(Date date) {
         return formatDate(date.toString());
     };
