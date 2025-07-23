@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>br.app.risetech.tools.report</groupId>
+  <artifactId>tools-report</artifactId>
+  <name>Tools Report</name>
+  <version>1.0</version>
+  <description>Uma biblioteca de utilitários e funções para relatórios.</description>
+  <url>https://github.com/SeuUsuario/tools-report</url>
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <build>
+    <finalName>tools-report</finalName>
+    <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+            </manifest>
+            <manifestEntries>
+              <Implementation-Version>${project.version}</Implementation-Version>
+              <Build-Developer>${app.developer}</Build-Developer>
+              <Build-Website>${app.website}</Build-Website>
+              <Build-Description>${app.description}</Build-Description>
+              <Build-Time>${build.timestamp}</Build-Time>
+              <Build-Project-Name>${project.artifactId}</Build-Project-Name>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer>
+                  <mainClass>br.app.risetech.tools.report.Main</mainClass>
+                </transformer>
+                <transformer />
+              </transformers>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <app.website>https://www.risetech.com.br</app.website>
+    <app.description>Tools Reports System</app.description>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <app.developer>Rise Tech</app.developer>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+</project>
