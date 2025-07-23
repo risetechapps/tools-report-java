@@ -220,7 +220,7 @@ public class Main {
                         .filter(countryInfo -> countryInfo.getIso3().equalsIgnoreCase(iso.trim()) ||
                                 countryInfo.getIso2().equalsIgnoreCase(iso.trim()))
                         .map(CountryInfo::getNativeName)
-                        .findFirst().orElse("");
+                        .findFirst().orElse("").toUpperCase();
 
             } catch (IOException e) {
 
@@ -249,7 +249,7 @@ public class Main {
                 return statesData.stream()
                         .filter(stateInfo -> stateInfo.getState().equalsIgnoreCase(iso.trim()))
                         .map(StateInfo::getName)
-                        .findFirst().orElse("");
+                        .findFirst().orElse("").toUpperCase();
 
             } catch (IOException e) {
 
