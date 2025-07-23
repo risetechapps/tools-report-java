@@ -1,15 +1,22 @@
 package br.app.risetech.tools.report;
 
+import br.app.risetech.tools.report.Geonames.CountryInfo;
+import br.app.risetech.tools.report.Geonames.StateInfo;
 import br.app.risetech.tools.report.types.Countries;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class Main {
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
 
     public static void main(String[] args) {
 
@@ -50,7 +57,6 @@ public class Main {
             return "";
         }
     }
-
 
     public static String formatDate(Date date) {
         return formatDate(date.toString());
@@ -173,6 +179,84 @@ public class Main {
         return mask(data, "(##) #####-####");
     };
 
+    public static List<String> stringToList(String data){
 
+        ObjectMapper objectMapper = new ObjectMapper();
 
+        try {
+            // Usa readValue para desserializar a string JSON para um List<String>
+            List<String> resultList = objectMapper.readValue(data, List.class);
+            return resultList;
+        } catch (JsonProcessingException e) {
+            System.err.println("Erro ao processar a string JSON: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static List<Map<String, List<String>>> stringToJson(String jsonData) {
+        try {
+            return OBJECT_MAPPER.readValue(jsonData, new TypeReference<List<Map<String, List<String>>>>() {});
+        } catch (JsonProcessingException e) {
+            return null;
+        }
+    }
+
+    public static String getNameCountry(String iso){
+
+        try{
+            List<CountryInfo> countryData;
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            try (InputStream is = Main.class.getClassLoader().getResourceAsStream("geonames/countries.json")) {
+
+                if (is == null) {
+                    return "";
+                }
+
+                countryData = objectMapper.readValue(is, new TypeReference<List<CountryInfo>>() {});
+
+                return countryData.stream()
+                        .filter(countryInfo -> countryInfo.getIso3().equalsIgnoreCase(iso.trim()) ||
+                                countryInfo.getIso2().equalsIgnoreCase(iso.trim()))
+                        .map(CountryInfo::getNativeName)
+                        .findFirst().orElse("");
+
+            } catch (IOException e) {
+
+                return  "";
+            }
+        }catch (Exception e){
+            return "";
+        }
+    }
+
+    public static String getNameState(String iso){
+
+        try{
+             List<StateInfo> statesData;
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            try (InputStream is = Main.class.getClassLoader().getResourceAsStream("geonames/states.json")) {
+
+                if (is == null) {
+                    return "";
+                }
+
+                statesData = objectMapper.readValue(is, new TypeReference<List<StateInfo>>() {});
+
+                return statesData.stream()
+                        .filter(stateInfo -> stateInfo.getState().equalsIgnoreCase(iso.trim()))
+                        .map(StateInfo::getName)
+                        .findFirst().orElse("");
+
+            } catch (IOException e) {
+
+                return  "";
+            }
+        }catch (Exception e){
+            return "";
+        }
+    }
 }
